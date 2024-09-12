@@ -31,9 +31,19 @@ public class HttpServer {
       System.out.println("Recibí: " + inputLine);
       if (!in.ready()) {break; }
    }
-   outputLine = "index.html";
-    
-    out.println(outputLine);
+      outputLine =
+              "<!DOCTYPE html>" +
+                      "<html>" +
+                      "<head>" +
+                      "<meta charset=\"UTF-8\">" +
+                      "<title>Title of the document</title>\n" +
+                      "</head>" +
+                      "<body>" +
+                      "<h1>Mi propio mensaje</h1>" +
+                      "</body>" +
+                      "</html>";
+
+      out.println(outputLine);
     out.close(); 
     in.close(); 
     clientSocket.close(); 
