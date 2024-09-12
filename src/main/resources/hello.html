@@ -1,49 +1,97 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Form Example</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <h1>Form with GET</h1>
-        <form action="/hello">
-            <label for="name">Name:</label><br>
-            <input type="text" id="name" name="name" value="John"><br><br>
-            <input type="button" value="Submit" onclick="loadGetMsg()">
-        </form> 
-        <div id="getrespmsg"></div>
-
-        <script>
-            function loadGetMsg() {
-                let nameVar = document.getElementById("name").value;
-                const xhttp = new XMLHttpRequest();
-                xhttp.onload = function() {
-                    document.getElementById("getrespmsg").innerHTML =
-                    this.responseText;
-                }
-                xhttp.open("GET", "/hello?name="+nameVar);
-                xhttp.send();
-            }
-        </script>
-
-        <h1>Form with POST</h1>
-        <form action="/hellopost">
-            <label for="postname">Name:</label><br>
-            <input type="text" id="postname" name="name" value="John"><br><br>
-            <input type="button" value="Submit" onclick="loadPostMsg(postname)">
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Interactiva</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #666;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #resultado {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e7f3fe;
+            border-left: 5px solid #2196F3;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Calculadora Interactiva</h1>
+        <form id="calculadoraForm">
+            <label for="operacion">Ingrese la operación:</label>
+            <input type="text" id="operacion" name="operacion" placeholder="Ejemplo: suma(5,3)" required>
+            <button type="submit">Calcular</button>
         </form>
-        
-        <div id="postrespmsg"></div>
-        
-        <script>
-            function loadPostMsg(name){
-                let url = "/hellopost?name=" + name.value;
+        <div id="resultado"></div>
+    </div>
 
-                fetch (url, {method: 'POST'})
-                    .then(x => x.text())
-                    .then(y => document.getElementById("postrespmsg").innerHTML = y);
-            }
-        </script>
-    </body>
+    <script>
+        document.getElementById('calculadoraForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            calcular();
+        });
+
+        function calcular() {
+            const operacion = document.getElementById('operacion').value;
+            fetch('/computar?comando=' + encodeURIComponent(operacion))
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('resultado').innerHTML = `<strong>Resultado:</strong> ${data}`;
+                })
+                .catch(error => {
+                    document.getElementById('resultado').innerHTML = `<strong>Error:</strong> ${error}`;
+                });
+        }
+    </script>
+</body>
 </html>
